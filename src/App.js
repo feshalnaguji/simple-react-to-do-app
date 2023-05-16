@@ -16,10 +16,10 @@ const App = () => {
     }
   }, []);
 
-  // Save todos to local storage whenever todos state changes
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+  // // Save todos to local storage whenever todos state changes
+  // useEffect(() => {
+  //   localStorage.setItem("todos", JSON.stringify(todos));
+  // }, [todos]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -27,7 +27,9 @@ const App = () => {
 
   const handleAddTodo = () => {
     if (inputValue.trim() !== "") {
-      setTodos([...todos, { text: inputValue, completed: false }]);
+      const newTodos = [...todos, { text: inputValue, completed: false }];
+      setTodos(newTodos);
+      localStorage.setItem("todos", JSON.stringify(newTodos));
       setInputValue("");
     }
   };
