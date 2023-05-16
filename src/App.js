@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./App.css";
 
 const App = () => {
@@ -16,10 +17,18 @@ const App = () => {
     }
   }, []);
 
-  // // Save todos to local storage whenever todos state changes
-  // useEffect(() => {
-  //   localStorage.setItem("todos", JSON.stringify(todos));
-  // }, [todos]);
+  const handleDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const updatedTodos = Array.from(todos);
+    const [movedTodo] = updatedTodos.splice(result.source.index, 1);
+    updatedTodos.splice(result.destination.index, 0, movedTodo);
+
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+  };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -103,40 +112,70 @@ const App = () => {
         />
         <button onClick={handleAddTodo}>Add</button>
       </div>
-      <ul className="todo-list">
-        {todos.filter(filterTodos).map((todo, index) => (
-          <li key={index} className="todo-item">
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => handleToggleTodo(index)}
-            />
-            {editIndex === index ? (
-              <input
-                type="text"
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-              />
-            ) : (
-              <label
-                className={todo.completed ? "completed" : ""}
-                onClick={() => handleToggleTodo(index)}
-              >
-                {todo.text}
-              </label>
-            )}
-            {editIndex === index ? (
-              <>
-                <button onClick={() => handleSaveTodo(index)}>Save</button>
-                <button onClick={handleCancelEdit}>Cancel</button>
-              </>
-            ) : (
-              <button onClick={() => handleEditTodo(index)}>Edit</button>
-            )}
-            <button onClick={() => handleDeleteTodo(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="todo-list">
+          {(provided) => (
+            <ul
+              className="todo-list"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {todos.filter(filterTodos).map((todo, index) => (
+                <Draggable
+                  key={index}
+                  draggableId={`todo-${index}`}
+                  index={index}
+                >
+                  {(provided) => (
+                    <li
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className="todo-item"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={todo.completed}
+                        onChange={() => handleToggleTodo(index)}
+                      />
+                      {editIndex === index ? (
+                        <input
+                          type="text"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                        />
+                      ) : (
+                        <label
+                          className={todo.completed ? "completed" : ""}
+                          onClick={() => handleToggleTodo(index)}
+                        >
+                          {todo.text}
+                        </label>
+                      )}
+                      {editIndex === index ? (
+                        <>
+                          <button onClick={() => handleSaveTodo(index)}>
+                            Save
+                          </button>
+                          <button onClick={handleCancelEdit}>Cancel</button>
+                        </>
+                      ) : (
+                        <button onClick={() => handleEditTodo(index)}>
+                          Edit
+                        </button>
+                      )}
+                      <button onClick={() => handleDeleteTodo(index)}>
+                        Delete
+                      </button>
+                    </li>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
       <div className="filter-buttons">
         <button
           className={filter === "all" ? "active" : ""}
