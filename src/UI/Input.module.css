@@ -1,0 +1,38 @@
+/* Futuristic Input Styles */
+.input {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid #00aaff;
+  padding: 10px;
+  transition: border-bottom-color 0.3s ease;
+  margin: 1rem;
+}
+
+.input:focus {
+  outline: none;
+  border-bottom-color: #ff00aa;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Animation */
+@keyframes input-pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 170, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 20px rgba(0, 170, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0px rgba(0, 170, 255, 0.5);
+  }
+}
+
+.input:focus:valid {
+  animation: input-pulse 1s infinite;
+}
