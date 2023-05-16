@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 const App = () => {
@@ -7,6 +7,19 @@ const App = () => {
   const [filter, setFilter] = useState("all");
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
+
+  // Load todos from local storage on initial render
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
+
+  // Save todos to local storage whenever todos state changes
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
