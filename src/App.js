@@ -44,11 +44,13 @@ const App = () => {
     const updatedTodos = [...todos];
     updatedTodos[index].completed = !updatedTodos[index].completed;
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   const handleDeleteTodo = (index) => {
     const updatedTodos = todos.filter((_, i) => i !== index);
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   const handleEditTodo = (index) => {
@@ -61,6 +63,7 @@ const App = () => {
       const updatedTodos = [...todos];
       updatedTodos[index].text = editValue;
       setTodos(updatedTodos);
+      localStorage.setItem("todos", JSON.stringify(updatedTodos));
       setEditIndex(null);
       setEditValue("");
     }
@@ -74,6 +77,7 @@ const App = () => {
   const handleClearCompleted = () => {
     const updatedTodos = todos.filter((todo) => !todo.completed);
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   const filterTodos = (todo) => {
