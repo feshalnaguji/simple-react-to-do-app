@@ -19,6 +19,12 @@ const App = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleAddTodo();
+    }
+  };
+
   const handleToggleTodo = (index) => {
     const updatedTodos = [...todos];
     updatedTodos[index].completed = !updatedTodos[index].completed;
@@ -74,6 +80,7 @@ const App = () => {
           placeholder="Enter a todo"
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
         />
         <button onClick={handleAddTodo}>Add</button>
       </div>
