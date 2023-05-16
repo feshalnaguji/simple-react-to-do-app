@@ -5,6 +5,8 @@ const App = () => {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filter, setFilter] = useState("all");
+  const [editIndex, setEditIndex] = useState(null);
+  const [editValue, setEditValue] = useState("");
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -26,6 +28,26 @@ const App = () => {
   const handleDeleteTodo = (index) => {
     const updatedTodos = todos.filter((_, i) => i !== index);
     setTodos(updatedTodos);
+  };
+
+  const handleEditTodo = (index) => {
+    setEditIndex(index);
+    setEditValue(todos[index].text);
+  };
+
+  const handleSaveTodo = (index) => {
+    if (editValue.trim() !== "") {
+      const updatedTodos = [...todos];
+      updatedTodos[index].text = editValue;
+      setTodos(updatedTodos);
+      setEditIndex(null);
+      setEditValue("");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditIndex(null);
+    setEditValue("");
   };
 
   const handleClearCompleted = () => {
@@ -63,12 +85,28 @@ const App = () => {
               checked={todo.completed}
               onChange={() => handleToggleTodo(index)}
             />
-            <label
-              className={todo.completed ? "completed" : ""}
-              onClick={() => handleToggleTodo(index)}
-            >
-              {todo.text}
-            </label>
+            {editIndex === index ? (
+              <input
+                type="text"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+              />
+            ) : (
+              <label
+                className={todo.completed ? "completed" : ""}
+                onClick={() => handleToggleTodo(index)}
+              >
+                {todo.text}
+              </label>
+            )}
+            {editIndex === index ? (
+              <>
+                <button onClick={() => handleSaveTodo(index)}>Save</button>
+                <button onClick={handleCancelEdit}>Cancel</button>
+              </>
+            ) : (
+              <button onClick={() => handleEditTodo(index)}>Edit</button>
+            )}
             <button onClick={() => handleDeleteTodo(index)}>Delete</button>
           </li>
         ))}
