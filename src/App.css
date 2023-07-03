@@ -78,11 +78,13 @@ ul.todo-list {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .todo-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  transform: translateY(-2px) scale(1.01);
 }
 
 .todo-item input[type="checkbox"] {
